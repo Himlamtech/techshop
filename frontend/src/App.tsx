@@ -12,6 +12,8 @@ import Favorites from "./components/Favorites";
 import LoginPage from "./components/auth/LoginPage";
 import RegisterPage from "./components/auth/RegisterPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import HomePage from "@frontend/src/pages/HomePage";
+import ProductListingPage from "@frontend/src/pages/ProductListingPage";
 import { Search, Sparkles, Scale, ShoppingBag, ShieldCheck, RefreshCw, AlertCircle, HelpCircle } from "lucide-react";
 
 export default function App() {
