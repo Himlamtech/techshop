@@ -108,6 +108,7 @@ class JWTAuthenticationMiddleware:
         "/healthz",
         "/readyz",
         "/admin/",
+        "/api/v1/auth/",
     ]
 
     def __init__(self, get_response):

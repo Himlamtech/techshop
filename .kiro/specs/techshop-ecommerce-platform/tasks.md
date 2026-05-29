@@ -60,14 +60,14 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 3. Phase 1 — Catalog Service + Frontend Product Display
-  - [~] 3.1 Implement Catalog Service models and migrations
+  - [x] 3.1 Implement Catalog Service models and migrations
     - Create Category model with UUID PK, name, slug, parent_id (self-referential FK), is_active, level (1-3 enforced)
     - Create Product model with UUID PK, sku (unique), name, slug, description, price (Decimal 0.01-999999999.99), stock (0-999999), brand, category FK, status (active/inactive), attributes (JSONField), rating_avg, rating_count, timestamps
     - Create ProductImage model with UUID PK, product FK, image_url, is_primary, sort_order; constraint: exactly one primary per product, max 20 images per product
     - Generate and apply migrations
     - _Requirements: 4.1, 4.5, 6.1_
 
-  - [~] 3.2 Implement Catalog Service serializers and validation
+  - [-] 3.2 Implement Catalog Service serializers and validation
     - Create CategorySerializer with nested children support
     - Create ProductSerializer with image nesting, field validation (price range, stock range, name length)
     - Create ProductImageSerializer
@@ -88,7 +88,7 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - GET /api/v1/categories/{slug}/products — products by category including subcategories
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.6, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 6.2, 6.3, 6.4, 6.5, 6.6_
 
-  - [~] 3.4 Implement Catalog Service product import management command
+  - [-] 3.4 Implement Catalog Service product import management command
     - Create `seed_products` management command that fetches from DummyJSON API
     - Map DummyJSON fields: title→name, thumbnail→primary image, images→additional images, price, stock, category, brand, description
     - Handle duplicate SKU by updating existing product (idempotent)
@@ -125,14 +125,14 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 5. Phase 2 — Identity Service (Authentication & Authorization)
-  - [~] 5.1 Implement Identity Service models and migrations
+  - [x] 5.1 Implement Identity Service models and migrations
     - Create User model with UUID PK, email (unique, max 254), password_hash, role (admin/staff/customer), is_active, failed_login_attempts, locked_until, timestamps
     - Create RefreshToken model with UUID PK, user FK, token_hash (unique), expires_at, is_revoked, created_at
     - Configure MySQL database connection
     - Generate and apply migrations
     - _Requirements: 1.1, 2.1, 2.5_
 
-  - [~] 5.2 Implement Identity Service authentication endpoints
+  - [-] 5.2 Implement Identity Service authentication endpoints
     - POST /api/v1/auth/register — create user with customer role, hash password, return access + refresh tokens
     - POST /api/v1/auth/login — validate credentials, return access (15min) + refresh (7d) tokens, include user_id/role/issuer/exp in JWT payload
     - POST /api/v1/auth/refresh — validate refresh token, issue new token pair, invalidate old refresh token
