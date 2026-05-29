@@ -7,7 +7,7 @@ import { GoogleGenAI } from "@google/genai";
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = parseInt(process.env.PORT || "5173", 10);
 
 // Parse JSON bodies
 app.use(express.json());
@@ -193,7 +193,7 @@ app.post("/api/chat", async (req, res) => {
     // Elegant simulated fallback
     setTimeout(() => {
       let responseText = `[DEMO MODE] Thanks for asking! I'm here to act as your Aether Tech Personal Shopper. Currently, we have some fantastic devices available, including the **Aether Glass Pro** ($899), the **Quantum Sound H1** ($349), and the developers' favorite **Nexus Key Zero** ($219). Let me know if you would like me to compare them or give you advice!`;
-      
+
       const lowerMsg = latestMessage.toLowerCase();
       if (lowerMsg.includes("recommend") || lowerMsg.includes("suggest") || lowerMsg.includes("buy")) {
         responseText = `Based on current tech trends, I highly suggest checking out the **Aether Glass Pro** if you want elite wearable AR capabilities, or the **Quantum Sound H1** headphones for industry-leading 360-degree spatial silence. What are your primary goals for these gadgets?`;
@@ -202,7 +202,7 @@ app.post("/api/chat", async (req, res) => {
       } else if (lowerMsg.includes("glass") || lowerMsg.includes("ar") || lowerMsg.includes("lens")) {
         responseText = `The **Aether Glass Pro** ($899) is our premium titanium mixed-reality HUD. It provides real-time AI translation overlays and works continuous bone conduction audio. Highly recommended for travelers and developers!`;
       }
-      
+
       res.json({ text: responseText });
     }, 1200);
     return;
@@ -210,7 +210,7 @@ app.post("/api/chat", async (req, res) => {
 
   try {
     const ai = getGeminiClient();
-    
+
     // Construct formatting and store catalogue guidelines
     const modelSystemInstruction = `You are the primary tech expert AI shopping assistant for AETHER Tech Shop, a premium, minimalist retailer for futuristic, extremely high-end hardware.
 You are warm, intelligent, objective, and expert-level. You speak with clear, supportive enthusiasm and avoid buzzwords.

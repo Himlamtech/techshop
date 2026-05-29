@@ -1,7 +1,48 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
-@import "tailwindcss";
 
-@theme {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .serif {
+    font-family: var(--font-serif, "Georgia", "Times New Roman", "Playfair Display", serif);
+  }
+
+  .cap-text {
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .vertical-text {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  .grid-line-b {
+    border-bottom: 0.5px solid var(--color-editorial-line, rgba(26, 26, 26, 0.12));
+  }
+
+  .grid-line-r {
+    border-right: 0.5px solid var(--color-editorial-line, rgba(26, 26, 26, 0.12));
+  }
+
+  .grid-line-l {
+    border-left: 0.5px solid var(--color-editorial-line, rgba(26, 26, 26, 0.12));
+  }
+
+  .grid-line-t {
+    border-top: 0.5px solid var(--color-editorial-line, rgba(26, 26, 26, 0.12));
+  }
+
+  .grid-line-all {
+    border: 0.5px solid var(--color-editorial-line, rgba(26, 26, 26, 0.12));
+  }
+}
+
+:root {
   --color-editorial-bg: #F4F1EA;
   --color-editorial-text: #1A1A1A;
   --color-editorial-accent: #E0D7C6;
@@ -13,54 +54,21 @@
   --font-sans: "Inter", "Helvetica Neue", "Arial", sans-serif;
 }
 
-@utility serif {
-  font-family: var(--font-serif);
-}
-
-@utility cap-text {
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-@utility vertical-text {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-}
-
-@utility grid-line-b {
-  border-bottom: 0.5px solid var(--color-editorial-line);
-}
-
-@utility grid-line-r {
-  border-right: 0.5px solid var(--color-editorial-line);
-}
-
-@utility grid-line-l {
-  border-left: 0.5px solid var(--color-editorial-line);
-}
-
-@utility grid-line-t {
-  border-top: 0.5px solid var(--color-editorial-line);
-}
-
-@utility grid-line-all {
-  border: 0.5px solid var(--color-editorial-line);
-}
-
 /* Custom editorial scrollbars */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
+
 ::-webkit-scrollbar-track {
   background: #F4F1EA;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #E0D7C6;
   border-radius: 0px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #1A1A1A;
 }

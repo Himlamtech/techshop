@@ -54,12 +54,12 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Create Dockerfile for frontend (node:20, npm build, serve)
     - _Requirements: 22.9_
 
-- [~] 2. Checkpoint — Verify infrastructure boots
+- [x] 2. Checkpoint — Verify infrastructure boots
   - Run `docker compose up -d` and verify all containers reach healthy status
   - Verify gateway routes return 502 (services not yet implemented) or healthcheck 200
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 3. Phase 1 — Catalog Service + Frontend Product Display
+- [x] 3. Phase 1 — Catalog Service + Frontend Product Display
   - [x] 3.1 Implement Catalog Service models and migrations
     - Create Category model with UUID PK, name, slug, parent_id (self-referential FK), is_active, level (1-3 enforced)
     - Create Product model with UUID PK, sku (unique), name, slug, description, price (Decimal 0.01-999999999.99), stock (0-999999), brand, category FK, status (active/inactive), attributes (JSONField), rating_avg, rating_count, timestamps
@@ -104,7 +104,7 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Test permissions (admin-only endpoints reject customer/guest)
     - _Requirements: 4.1, 4.2, 5.1, 5.6, 5.7, 5.8, 6.3, 6.4_
 
-  - [-] 3.6 Implement Frontend homepage and product listing
+  - [x] 3.6 Implement Frontend homepage and product listing
     - Create homepage with hero section, category shortcuts (8 categories), featured products grid (4-8 products)
     - Create product listing page with sidebar filters (category, brand, price range, rating), sort options, paginated grid (12 per page)
     - Create product card component with image, name, price, rating, stock badge
@@ -113,13 +113,13 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Implement empty state and error state with retry
     - _Requirements: 22.1, 22.2, 22.9, 22.10_
 
-  - [~] 3.7 Implement Frontend product detail page
+  - [x] 3.7 Implement Frontend product detail page
     - Create product detail page with image gallery, specifications, price, stock status, add-to-cart button
     - Display average rating and review count
     - Implement responsive layout (2-col/1-col below 768px)
     - _Requirements: 22.3, 22.11_
 
-- [~] 4. Checkpoint — Catalog service end-to-end
+- [x] 4. Checkpoint — Catalog service end-to-end
   - Seed products via management command, verify homepage displays 50+ products with images
   - Verify product detail page opens, filter by category works
   - Ensure all tests pass, ask the user if questions arise.
@@ -165,13 +165,13 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - _Requirements: 22.5, 22.6_
 
 - [ ] 6. Phase 2 — Cart Service
-  - [-] 6.1 Implement Cart Service models and migrations
+  - [x] 6.1 Implement Cart Service models and migrations
     - Create Cart model with UUID PK, user_id (unique — one cart per customer), timestamps
     - Create CartItem model with UUID PK, cart FK, product_id, quantity (1-99), timestamps; unique constraint on (cart_id, product_id)
     - Generate and apply migrations
     - _Requirements: 7.8_
 
-  - [~] 6.2 Implement Cart Service endpoints
+  - [x] 6.2 Implement Cart Service endpoints
     - GET /api/v1/cart/current — return cart items with product_id, name, thumbnail, unit_price, quantity, line_total, cart subtotal
     - POST /api/v1/cart/items — add item; validate product active + in-stock via Catalog Service (ServiceClient, 3s timeout)
     - PATCH /api/v1/cart/items/{id} — update quantity (1-99, validate stock)
@@ -199,7 +199,7 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Verify unique constraint on Cart.user_id prevents multiple carts per customer
     - **Validates: Requirements 7.8**
 
-  - [~] 6.6 Implement Frontend cart page
+  - [-] 6.6 Implement Frontend cart page
     - Create cart page with item list, quantity controls (+/-), remove button
     - Display order summary (subtotal, item count)
     - Add proceed-to-checkout button (disabled if cart empty)
@@ -207,7 +207,7 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - _Requirements: 22.5_
 
 - [ ] 7. Phase 2 — Order Service
-  - [~] 7.1 Implement Order Service models and migrations
+  - [x] 7.1 Implement Order Service models and migrations
     - Create Order model with UUID PK, user_id, status (enum: created/payment_pending/paid/payment_failed/shipping/completed/cancelled), subtotal, shipping_fee, discount_amount, total_amount (all Decimal 2dp), shipping_address, timestamps
     - Create OrderItem model with UUID PK, order FK, product_id, product_name, product_sku, product_image_url, unit_price, quantity, line_total (price snapshot fields)
     - Create OrderStatusHistory model with UUID PK, order FK, from_status, to_status, reason (max 500), created_at
@@ -215,7 +215,7 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Generate and apply migrations
     - _Requirements: 8.2, 8.5, 8.6, 23.1, 23.2, 23.3_
 
-  - [~] 7.2 Implement Order Service checkout workflow
+  - [-] 7.2 Implement Order Service checkout workflow
     - POST /api/v1/orders/checkout — orchestrate: get cart (5s timeout) → validate items via Catalog (5s timeout) → create order + items with price snapshot → create payment via Payment Service → handle payment result → create shipment on success
     - Implement status transition logic with optimistic locking (WHERE current_status = expected)
     - Reject empty cart checkout with VALIDATION_ERROR
@@ -224,7 +224,7 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Return VALIDATION_ERROR listing failed items if any product validation fails
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 23.4, 23.5_
 
-  - [~] 7.3 Implement Order Service list and detail endpoints
+  - [-] 7.3 Implement Order Service list and detail endpoints
     - GET /api/v1/orders — paginated list of user's orders (customer sees own, staff/admin see all)
     - GET /api/v1/orders/{id} — order detail with items and status history
     - PATCH /api/v1/orders/{id}/cancel — cancel order (customer owner, staff, or admin only)
@@ -249,15 +249,15 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Verify only allowed transitions succeed; invalid transitions are rejected atomically
     - **Validates: Requirements 23.2, 23.4**
 
-- [ ] 8. Phase 2 — Payment Service
-  - [-] 8.1 Implement Payment Service models and migrations
+- [x] 8. Phase 2 — Payment Service
+  - [x] 8.1 Implement Payment Service models and migrations
     - Create PaymentTransaction model with UUID PK, order_id, amount (Decimal 2dp), status (pending/success/failed), idempotency_key (unique), timestamps
     - Create PaymentStatusHistory model with UUID PK, transaction FK, from_status, to_status, created_at
     - Configure MySQL database connection
     - Generate and apply migrations
     - _Requirements: 9.1, 9.6_
 
-  - [~] 8.2 Implement Payment Service endpoints
+  - [x] 8.2 Implement Payment Service endpoints
     - POST /api/v1/payments — create payment transaction (order_id, amount, idempotency_key required); return existing result if idempotency_key matches
     - POST /api/v1/payments/{id}/simulate-success — transition pending→success, record status history
     - POST /api/v1/payments/{id}/simulate-failure — transition pending→failed, record status history
@@ -276,15 +276,15 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Verify duplicate payment requests with same idempotency_key return same result without creating additional transactions
     - **Validates: Requirements 9.6**
 
-- [ ] 9. Phase 2 — Shipping Service
-  - [-] 9.1 Implement Shipping Service models and migrations
+- [x] 9. Phase 2 — Shipping Service
+  - [x] 9.1 Implement Shipping Service models and migrations
     - Create Shipment model with UUID PK, order_id (unique), tracking_code (unique, 8-20 alphanumeric), status (processing/shipping/delivered), shipping_address, timestamps
     - Create ShipmentStatusHistory model with UUID PK, shipment FK, from_status, to_status, created_at
     - Define SHIPMENT_TRANSITIONS: processing→shipping, shipping→delivered (forward-only)
     - Generate and apply migrations
     - _Requirements: 10.2, 10.3_
 
-  - [~] 9.2 Implement Shipping Service endpoints
+  - [x] 9.2 Implement Shipping Service endpoints
     - POST /api/v1/shipments — create shipment with generated tracking code, initial status "processing"
     - PATCH /api/v1/shipments/{id}/status — staff updates status (forward-only transitions enforced)
     - GET /api/v1/shipments/order/{order_id} — customer gets shipment status, tracking code, status history
@@ -310,7 +310,7 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 11. Phase 2 — Frontend Checkout and Order Tracking
-  - [~] 11.1 Implement Frontend checkout page
+  - [-] 11.1 Implement Frontend checkout page
     - Create checkout page with shipping address form, payment method selector, order summary
     - Call POST /api/orders/checkout on submit
     - Display payment status feedback (success/failure)

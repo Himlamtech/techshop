@@ -14,6 +14,7 @@ import RegisterPage from "./components/auth/RegisterPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import HomePage from "@frontend/src/pages/HomePage";
 import ProductListingPage from "@frontend/src/pages/ProductListingPage";
+import ProductDetailPage from "@frontend/src/pages/ProductDetailPage";
 import { Search, Sparkles, Scale, ShoppingBag, ShieldCheck, RefreshCw, AlertCircle, HelpCircle } from "lucide-react";
 
 export default function App() {
@@ -231,6 +232,71 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/" element={
+        <div className="min-h-screen bg-gray-50 text-gray-900 relative pb-16">
+          <Navbar
+            cartCount={cart.reduce((sum, i) => sum + i.quantity, 0)}
+            onCartClick={() => setCartOpen(true)}
+            comparedCount={comparedProducts.length}
+            onCompareClick={() => setComparisonOpen(true)}
+            onAICompanionClick={() => {
+              const btn = document.getElementById("nav-ai-button");
+              if (btn) btn.click();
+            }}
+            favoritesCount={favorites.length}
+            onFavoritesClick={() => setFavoritesOpen(true)}
+          />
+          <main className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
+            <HomePage />
+          </main>
+          {cartOpen && (
+            <Cart items={cart} onUpdateQuantity={handleUpdateQuantity} onRemoveItem={handleRemoveItem} onClose={() => setCartOpen(false)} onClearCart={handleClearCart} />
+          )}
+          {selectedProduct && (
+            <ProductDetails product={selectedProduct} onClose={() => setSelectedProduct(null)} onAddToCart={handleAddToCart} isFavorite={favorites.some((p) => p.id === selectedProduct.id)} onToggleFavorite={handleToggleFavorite} />
+          )}
+          {favoritesOpen && (
+            <Favorites items={favorites} onRemoveFavorite={handleToggleFavorite} onAddToCart={handleAddToCart} onClose={() => setFavoritesOpen(false)} />
+          )}
+          {comparisonOpen && (
+            <ComparisonModal products={comparedProducts} onRemove={handleRemoveCompare} onClose={() => setComparisonOpen(false)} allProducts={PRODUCTS} onSelectProduct={(p) => setComparedProducts((prev) => [...prev, p])} />
+          )}
+          <AIChatBot products={PRODUCTS} selectedProductId={selectedProduct?.id} />
+        </div>
+      } />
+      <Route path="/products/:id" element={<ProductDetailPage />} />
+      <Route path="/products" element={
+        <div className="min-h-screen bg-gray-50 text-gray-900 relative pb-16">
+          <Navbar
+            cartCount={cart.reduce((sum, i) => sum + i.quantity, 0)}
+            onCartClick={() => setCartOpen(true)}
+            comparedCount={comparedProducts.length}
+            onCompareClick={() => setComparisonOpen(true)}
+            onAICompanionClick={() => {
+              const btn = document.getElementById("nav-ai-button");
+              if (btn) btn.click();
+            }}
+            favoritesCount={favorites.length}
+            onFavoritesClick={() => setFavoritesOpen(true)}
+          />
+          <main className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-10">
+            <ProductListingPage />
+          </main>
+          {cartOpen && (
+            <Cart items={cart} onUpdateQuantity={handleUpdateQuantity} onRemoveItem={handleRemoveItem} onClose={() => setCartOpen(false)} onClearCart={handleClearCart} />
+          )}
+          {selectedProduct && (
+            <ProductDetails product={selectedProduct} onClose={() => setSelectedProduct(null)} onAddToCart={handleAddToCart} isFavorite={favorites.some((p) => p.id === selectedProduct.id)} onToggleFavorite={handleToggleFavorite} />
+          )}
+          {favoritesOpen && (
+            <Favorites items={favorites} onRemoveFavorite={handleToggleFavorite} onAddToCart={handleAddToCart} onClose={() => setFavoritesOpen(false)} />
+          )}
+          {comparisonOpen && (
+            <ComparisonModal products={comparedProducts} onRemove={handleRemoveCompare} onClose={() => setComparisonOpen(false)} allProducts={PRODUCTS} onSelectProduct={(p) => setComparedProducts((prev) => [...prev, p])} />
+          )}
+          <AIChatBot products={PRODUCTS} selectedProductId={selectedProduct?.id} />
+        </div>
+      } />
       <Route path="*" element={
         <div className="min-h-screen bg-editorial-bg text-editorial-text relative pb-16 selection:bg-editorial-accent selection:text-editorial-dark">
 
