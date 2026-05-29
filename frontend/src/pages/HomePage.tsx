@@ -21,6 +21,7 @@ import { apiClient } from '@frontend/src/lib/api-client';
 import ImageWithFallback from '@frontend/src/components/product/ImageWithFallback';
 import ProductCardSkeleton from '@frontend/src/components/product/ProductCardSkeleton';
 import ErrorState from '@frontend/src/components/product/ErrorState';
+import RecommendationCarousel from '@frontend/src/components/product/RecommendationCarousel';
 
 interface CatalogProduct {
     id: string;
@@ -228,6 +229,9 @@ export default function HomePage() {
                     </div>
                 )}
             </section>
+
+            {/* AI Recommendations Carousel */}
+            <RecommendationCarousel />
 
             {/* Trust Indicators */}
             <section className="bg-gray-50 rounded-2xl p-6 md:p-8">

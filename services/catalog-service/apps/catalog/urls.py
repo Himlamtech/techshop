@@ -14,11 +14,13 @@ Endpoints:
 - GET    /categories/                      — List active categories (tree)
 - POST   /categories/                      — Admin create category
 - GET    /categories/<slug:slug>/products/ — Products by category
+- GET    /admin/stats                      — Admin catalog statistics
 """
 
 from django.urls import path
 
 from apps.catalog.views import (
+    AdminStatsView,
     CategoryListView,
     CategoryProductsView,
     ProductBulkValidateView,
@@ -28,6 +30,8 @@ from apps.catalog.views import (
 )
 
 urlpatterns = [
+    # Admin endpoints
+    path("admin/stats", AdminStatsView.as_view(), name="admin-stats"),
     # Product endpoints — validate-bulk and import must come before <uuid:pk> to avoid conflicts
     path("products/validate-bulk/", ProductBulkValidateView.as_view(), name="product-validate-bulk"),
     path("products/import/", ProductImportView.as_view(), name="product-import"),

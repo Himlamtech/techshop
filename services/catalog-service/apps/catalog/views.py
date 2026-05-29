@@ -8,6 +8,7 @@ All responses use the standard envelope format via success_response/error_respon
 
 from django.core.management import call_command
 from django.db import transaction
+from django.db.models import Count
 from django.utils.text import slugify
 from rest_framework.views import APIView
 
@@ -312,6 +313,44 @@ class CategoryProductsView(APIView):
 
         serializer = ProductListSerializer(page, many=True)
         return paginator.get_paginated_response(serializer.data)
+
+
+# =============================================================================
+# Admin Views
+# =============================================================================
+
+
+class AdminStatsView(APIView):
+    """
+    GET /api/v1/admin/stats — Admin dashboard statistics for the catalog.
+
+    Returns total products, active products, total categories,
+    and product counts grouped by category.
+    """
+
+    permission_classes = [IsAdmin]
+
+    def get(self, request):
+        total_products = Product.objects.count()
+        active_products = Product.objects.filter(status="active").count()
+        total_categories = Category.objects.filter(is_active=True).count()
+
+        products_by_category = (
+            Category.objects.filter(is_active=True)
+            .annotate(count=Count("products"))
+            .values("name", "count")
+            .order_by("-count")
+        )
+
+        return success_response({
+            "total_products": total_products,
+            "active_products": active_products,
+            "total_categories": total_categories,
+            "products_by_category": [
+                {"name": item["name"], "count": item["count"]}
+                for item in products_by_category
+            ],
+        })
 
 
 # =============================================================================

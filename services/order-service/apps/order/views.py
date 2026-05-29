@@ -5,12 +5,12 @@ Handles HTTP request/response layer with no business logic.
 All responses use the standard envelope format.
 """
 
-from django.db.models import Count
+from django.db.models import Count, Sum
 from rest_framework.views import APIView
 
 from apps.core.exceptions import ForbiddenError, NotFoundError, ValidationError
 from apps.core.pagination import StandardPagination
-from apps.core.permissions import IsAuthenticated, IsCustomer
+from apps.core.permissions import IsAdmin, IsAuthenticated, IsCustomer
 from apps.core.responses import success_response
 from apps.order.models import ORDER_TRANSITIONS, Order, OrderStatusHistory
 from apps.order.serializers import (
@@ -212,6 +212,46 @@ class OrderCancelView(APIView):
 
         serializer = OrderDetailOutputSerializer(order_data)
         return success_response(serializer.data)
+
+
+# =============================================================================
+# Admin Views
+# =============================================================================
+
+
+class AdminOrderStatsView(APIView):
+    """
+    GET /api/v1/admin/stats — Admin dashboard statistics for orders.
+
+    Returns total orders, orders grouped by status, and total revenue
+    (sum of total_amount for paid and completed orders).
+    """
+
+    permission_classes = [IsAdmin]
+
+    def get(self, request):
+        total_orders = Order.objects.count()
+
+        # Orders grouped by status
+        status_counts = (
+            Order.objects.values("status")
+            .annotate(count=Count("id"))
+            .order_by("status")
+        )
+        orders_by_status = {item["status"]: item["count"] for item in status_counts}
+
+        # Total revenue from paid and completed orders
+        revenue = Order.objects.filter(
+            status__in=["paid", "completed"]
+        ).aggregate(total_revenue=Sum("total_amount"))
+
+        total_revenue = str(revenue["total_revenue"] or "0.00")
+
+        return success_response({
+            "total_orders": total_orders,
+            "orders_by_status": orders_by_status,
+            "total_revenue": total_revenue,
+        })
 
 
 # =============================================================================

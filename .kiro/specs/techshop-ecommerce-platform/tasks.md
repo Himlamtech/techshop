@@ -379,13 +379,13 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Handle loading state and error state
     - _Requirements: 22.4_
 
-- [~] 13. Checkpoint — RAG chatbot working
+- [x] 13. Checkpoint — RAG chatbot working
   - Ingest catalog + FAQ documents, verify embeddings stored
   - Ask product advisory question, verify grounded answer with product IDs
   - Verify frontend renders product cards in chat response
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 14. Phase 4 — AI Sentiment Analysis Model
+- [x] 14. Phase 4 — AI Sentiment Analysis Model
   - [x] 14.1 Implement sentiment analysis model and endpoint
     - Create sentiment model module (BERT/PhoBERT/mBERT) in app/ml/sentiment/
     - Implement model loading, tokenization, and inference pipeline
@@ -394,7 +394,7 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Enforce 3-second response timeout
     - _Requirements: 14.1, 14.2, 14.3, 14.4, 14.5_
 
-  - [~] 14.2 Implement dataset ingestion for sentiment training
+  - [x] 14.2 Implement dataset ingestion for sentiment training
     - Create management command to ingest Amazon Reviews 2023/UCSD dataset
     - Parse review records, store processed entries for training
     - Report total records ingested on completion
@@ -408,8 +408,8 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Test model_version included in response
     - _Requirements: 14.1, 14.3, 14.4_
 
-- [ ] 15. Phase 4 — AI Customer Segmentation Model
-  - [-] 15.1 Implement customer segmentation model and endpoint
+- [x] 15. Phase 4 — AI Customer Segmentation Model
+  - [x] 15.1 Implement customer segmentation model and endpoint
     - Create KMeans segmentation module in app/ml/segmentation/
     - Implement RFM feature computation (Recency days, Frequency orders, Monetary total spend)
     - Implement KMeans clustering with silhouette score optimization (3-8 clusters)
@@ -420,7 +420,7 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Reject if fewer than 30 customers with completed orders (VALIDATION_ERROR)
     - _Requirements: 15.1, 15.2, 15.3, 15.4, 15.5_
 
-  - [~] 15.2 Implement dataset ingestion for segmentation training
+  - [x] 15.2 Implement dataset ingestion for segmentation training
     - Create management command to ingest UCI Online Retail dataset
     - Parse transaction records, store processed entries for RFM analysis
     - Report total customer records processed on completion
@@ -435,8 +435,8 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Test result storage
     - _Requirements: 15.1, 15.4, 15.5_
 
-- [ ] 16. Phase 4 — AI Product Classification Model
-  - [-] 16.1 Implement product classification model and endpoint
+- [x] 16. Phase 4 — AI Product Classification Model
+  - [x] 16.1 Implement product classification model and endpoint
     - Create XGBoost/LightGBM classification module in app/ml/product_classifier/
     - Implement feature extraction from product title, description, brand, attributes
     - POST /api/v1/classification — accept product data, return predicted category_label, category_id, confidence_score (0.0-1.0)
@@ -451,8 +451,8 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Test model unavailable handling
     - _Requirements: 16.1, 16.3, 16.4, 16.5_
 
-- [ ] 17. Phase 4 — AI Sequence Recommendation Model
-  - [-] 17.1 Implement sequence recommendation model and endpoint
+- [x] 17. Phase 4 — AI Sequence Recommendation Model
+  - [x] 17.1 Implement sequence recommendation model and endpoint
     - Create LSTM/GRU sequence model module in app/ml/sequence_model/
     - Implement model that predicts next products from interaction sequence
     - Integrate into GET /api/v1/recommendations endpoint as sequence_score component (weight 0.30)
@@ -461,7 +461,7 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Exclude inactive and out-of-stock products from results
     - _Requirements: 17.1, 17.2, 17.3, 17.4, 17.5_
 
-  - [~] 17.2 Implement dataset ingestion for sequence model training
+  - [x] 17.2 Implement dataset ingestion for sequence model training
     - Create management command to ingest RetailRocket Ecommerce Dataset
     - Parse user interaction events (view, add_to_cart, purchase)
     - Store processed sequences for training
@@ -477,8 +477,8 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Test score range (0.0-1.0)
     - _Requirements: 17.1, 17.3, 17.4, 17.5_
 
-- [ ] 18. Phase 4 — Hybrid Recommendation Endpoint
-  - [-] 18.1 Implement hybrid recommendation scoring pipeline
+- [x] 18. Phase 4 — Hybrid Recommendation Endpoint
+  - [x] 18.1 Implement hybrid recommendation scoring pipeline
     - GET /api/v1/recommendations — accept user_id, optional context_product_id, optional budget (min/max price)
     - Compute hybrid score: 0.30 sequence + 0.25 content similarity + 0.20 collaborative + 0.15 popularity + 0.10 business rules
     - Cold start fallback: if user has <3 interactions, use popularity + business rules only
@@ -497,13 +497,13 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Test inactive/out-of-stock exclusion
     - _Requirements: 13.1, 13.2, 13.3, 13.4, 13.5, 13.6_
 
-  - [~] 18.3 Implement Frontend AI recommendation carousel
+  - [x] 18.3 Implement Frontend AI recommendation carousel
     - Add recommendation carousel to homepage (up to 10 products)
     - Fetch recommendations from /api/ai/recommendations
     - Display product cards with score-based ordering
     - _Requirements: 22.1_
 
-- [~] 19. Checkpoint — All AI models functional
+- [x] 19. Checkpoint — All AI models functional
   - Verify sentiment analysis returns valid labels for sample reviews
   - Verify segmentation produces clusters with silhouette score
   - Verify classification assigns categories with confidence scores
@@ -511,8 +511,8 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
   - Verify hybrid recommendations combine all scores correctly
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 20. Phase 5 — Review Service
-  - [-] 20.1 Implement Review Service models and migrations
+- [x] 20. Phase 5 — Review Service
+  - [x] 20.1 Implement Review Service models and migrations
     - Create Review model with UUID PK, user_id, product_id, rating (1-5), comment (1-2000 chars), sentiment_label (nullable), sentiment_score (nullable), sentiment_status (completed/pending), created_at
     - Add unique constraint on (user_id, product_id)
     - Generate and apply migrations
@@ -538,8 +538,8 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Verify unique constraint on (user_id, product_id) prevents duplicate reviews
     - **Validates: Requirements 11.3**
 
-- [ ] 21. Phase 5 — Admin Dashboard
-  - [~] 21.1 Implement Frontend admin dashboard
+- [x] 21. Phase 5 — Admin Dashboard
+  - [x] 21.1 Implement Frontend admin dashboard
     - Create admin dashboard with overview metrics (total products, orders, revenue, active users)
     - Create product management table (list, edit, import trigger)
     - Create order management table (list, status updates)
@@ -547,7 +547,7 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Restrict access to admin role
     - _Requirements: 22.8_
 
-  - [~] 21.2 Implement admin-specific API endpoints across services
+  - [x] 21.2 Implement admin-specific API endpoints across services
     - Catalog: GET /api/v1/admin/stats (product counts, category counts)
     - Order: GET /api/v1/admin/stats (order counts by status, revenue totals)
     - Identity: GET /api/v1/admin/users (user list with roles, paginated)
@@ -555,8 +555,8 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Enforce admin role on all admin endpoints
     - _Requirements: 3.1, 25.3_
 
-- [ ] 22. Phase 5 — Security Hardening and CORS
-  - [~] 22.1 Implement security configurations across all services
+- [x] 22. Phase 5 — Security Hardening and CORS
+  - [x] 22.1 Implement security configurations across all services
     - Configure CORS to allow only known frontend origin
     - Set DEBUG=false in deployment configuration
     - Ensure .env files excluded from version control
@@ -565,20 +565,20 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Verify gateway body size limit (20MB)
     - _Requirements: 25.1, 25.2, 25.3, 25.4, 25.5, 25.6_
 
-- [ ] 23. Phase 5 — Integration Wiring and Final Polish
-  - [~] 23.1 Wire Order Service retry logic for Shipping Service
+- [x] 23. Phase 5 — Integration Wiring and Final Polish
+  - [x] 23.1 Wire Order Service retry logic for Shipping Service
     - Implement retry on shipment creation: 3 attempts, 2-second interval
     - Order remains in "paid" status if all retries fail
     - Log each retry attempt with request_id
     - _Requirements: 10.6_
 
-  - [~] 23.2 Wire Review Service sentiment integration
+  - [x] 23.2 Wire Review Service sentiment integration
     - On review creation, call AI /api/v1/sentiment endpoint
     - Store sentiment_label and sentiment_score on success
     - Mark sentiment_status=pending on AI failure (graceful degradation)
     - _Requirements: 11.4, 11.5_
 
-  - [~] 23.3 Wire Catalog rating updates from Review Service
+  - [x] 23.3 Wire Catalog rating updates from Review Service
     - After review creation, update product rating_avg and rating_count in Catalog Service
     - Use ServiceClient to call Catalog update endpoint
     - _Requirements: 11.7_
@@ -595,7 +595,7 @@ This implementation plan breaks down the TechShop microservices e-commerce platf
     - Test cart stock validation: cart → catalog product validation
     - _Requirements: 8.1, 9.4, 10.1, 11.4_
 
-- [~] 24. Final Checkpoint — Full system demo
+- [x] 24. Final Checkpoint — Full system demo
   - Verify complete demo script: homepage → search → detail → AI chat → cart → checkout → payment → shipping → order tracking → admin dashboard
   - Verify all healthchecks pass
   - Verify structured logging with request_id propagation

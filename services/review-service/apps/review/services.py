@@ -21,14 +21,16 @@ class ReviewService:
     """
     Service layer for review operations.
 
-    Coordinates purchase verification (Order Service) and
-    sentiment analysis (AI Service) during review creation.
+    Coordinates purchase verification (Order Service),
+    sentiment analysis (AI Service), and catalog rating updates
+    (Catalog Service) during review creation.
     """
 
     def __init__(self, authorization_header: str | None = None):
         self.authorization_header = authorization_header
         self.order_client = ServiceClient(settings.ORDER_SERVICE_URL)
         self.ai_client = ServiceClient(settings.AI_SERVICE_URL, timeout_seconds=5.0)
+        self.catalog_client = ServiceClient(settings.CATALOG_SERVICE_URL, timeout_seconds=5.0)
 
     def create_review(self, user_id: str, product_id: str, rating: int, comment: str) -> Review:
         """
@@ -71,6 +73,9 @@ class ReviewService:
             )
         except IntegrityError:
             raise ConflictError("You have already reviewed this product")
+
+        # Step 4: Update catalog product rating
+        self._update_catalog_rating(product_id)
 
         return review
 
@@ -195,3 +200,46 @@ class ReviewService:
         except (ServiceUnavailableError, Exception) as e:
             logger.warning("AI Service unavailable for sentiment analysis: %s", str(e))
             return None, None, "pending"
+
+    def _update_catalog_rating(self, product_id: str) -> None:
+        """
+        Update the product's rating_avg and rating_count in the Catalog Service.
+
+        Computes the current average rating and total review count for the product,
+        then calls PATCH /api/v1/products/{product_id} on the Catalog Service.
+
+        This is a best-effort operation — failures are logged but do not
+        prevent the review from being created.
+
+        Args:
+            product_id: UUID of the product to update ratings for.
+        """
+        try:
+            stats = self.get_product_review_stats(product_id)
+            average_rating = stats["average_rating"]
+            total_reviews = stats["total_reviews"]
+
+            headers = {}
+            if self.authorization_header:
+                headers["Authorization"] = self.authorization_header
+
+            self.catalog_client.patch(
+                f"/api/v1/products/{product_id}/",
+                headers=headers,
+                json={
+                    "rating_avg": average_rating,
+                    "rating_count": total_reviews,
+                },
+            )
+            logger.info(
+                "Updated catalog rating for product %s: avg=%.1f, count=%d",
+                product_id,
+                average_rating,
+                total_reviews,
+            )
+        except (ServiceUnavailableError, Exception) as e:
+            logger.warning(
+                "Failed to update catalog rating for product %s: %s",
+                product_id,
+                str(e),
+            )

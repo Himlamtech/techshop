@@ -10,7 +10,10 @@ import logging
 from rest_framework.views import APIView
 
 from apps.core.exceptions import UnauthorizedError
+from apps.core.pagination import StandardPagination
+from apps.core.permissions import IsAdmin
 from apps.core.responses import error_response, success_response
+from apps.identity.models import User
 from apps.identity.serializers import LoginSerializer, RefreshSerializer, RegisterSerializer
 from apps.identity.services import AccountLockedError, AuthService
 
@@ -130,3 +133,37 @@ def _format_serializer_errors(errors):
         for message in messages:
             details.append({"field": field, "reason": str(message)})
     return details
+
+
+# =============================================================================
+# Admin Views
+# =============================================================================
+
+
+class AdminUsersView(APIView):
+    """
+    GET /api/v1/admin/users — Paginated list of all users for admin.
+
+    Returns id, email, role, is_active, and created_at for each user.
+    """
+
+    permission_classes = [IsAdmin]
+
+    def get(self, request):
+        queryset = User.objects.all().order_by("-created_at")
+
+        paginator = StandardPagination()
+        page = paginator.paginate_queryset(queryset, request)
+
+        users_data = [
+            {
+                "id": str(user.id),
+                "email": user.email,
+                "role": user.role,
+                "is_active": user.is_active,
+                "created_at": user.created_at.isoformat(),
+            }
+            for user in page
+        ]
+
+        return paginator.get_paginated_response(users_data)
